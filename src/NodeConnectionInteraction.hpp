@@ -2,15 +2,12 @@
 
 #include <memory>
 
-#include "Node.hpp"
-#include "Connection.hpp"
+#include "NodeIndex.hpp"
+#include "PortType.hpp"
+#include "ConnectionGraphicsObject.hpp"
 
 namespace QtNodes
 {
-
-class DataModelRegistry;
-class FlowScene;
-class NodeDataModel;
 
 /// Class performs various operations on the Node and Connection pair.
 /// An instance should be created on the stack and destroyed when
@@ -18,9 +15,8 @@ class NodeDataModel;
 class NodeConnectionInteraction
 {
 public:
-  NodeConnectionInteraction(Node& node,
-                            Connection& connection,
-                            FlowScene& scene);
+  NodeConnectionInteraction(NodeIndex const& node,
+                            ConnectionGraphicsObject& connection);
 
   /// Can connect when following conditions are met:
   /// 1) Connection 'requires' a port
@@ -29,7 +25,7 @@ public:
   /// 4) Connection type equals node port type, or there is a registered type conversion that can translate between the two
   bool canConnect(PortIndex &portIndex, 
                   bool& typeConversionNeeded,
-                  std::unique_ptr<NodeDataModel> & converterModel) const;
+                  QString& converterModel) const;
 
   /// 1)   Check conditions from 'canConnect'
   /// 1.5) If the connection is possible but a type conversion is needed, add a converter node to the scene, and connect it properly
@@ -62,10 +58,8 @@ private:
   
 private:
 
-  Node* _node;
+  NodeIndex _node;
 
-  Connection* _connection;
-  
-  FlowScene* _scene;
+  ConnectionGraphicsObject* _connection;
 };
 }

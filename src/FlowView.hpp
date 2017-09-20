@@ -19,6 +19,9 @@ public:
 
   FlowView(const FlowView&) = delete;
   FlowView operator=(const FlowView&) = delete;
+  
+  FlowScene&
+  flowScene() const { return *_scene; }
 
   QAction* clearSelectionAction() const;
 

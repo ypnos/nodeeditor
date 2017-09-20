@@ -14,6 +14,7 @@
 #include "ConnectionGeometry.hpp"
 #include "QUuidStdHash.hpp"
 #include "Export.hpp"
+#include "ConnectionID.hpp"
 
 class QPointF;
 
@@ -34,13 +35,6 @@ class NODE_EDITOR_PUBLIC Connection
 
 public:
 
-  /// New Connection is attached to the port of the given Node.
-  /// The port has parameters (portType, portIndex).
-  /// The opposite connection end will require anothre port.
-  Connection(PortType portType,
-             Node& node,
-             PortIndex portIndex);
-
   Connection(Node& nodeIn,
              PortIndex portIndexIn,
              Node& nodeOut,
@@ -57,47 +51,6 @@ public:
   save() const override;
 
 public:
-
-  QUuid
-  id() const;
-
-  /// Remembers the end being dragged.
-  /// Invalidates Node address.
-  /// Grabs mouse.
-  void
-  setRequiredPort(PortType portType);
-  PortType
-  requiredPort() const;
-
-  void
-  setGraphicsObject(std::unique_ptr<ConnectionGraphicsObject>&& graphics);
-
-  /// Assigns a node to the required port.
-  /// It is assumed that there is a required port, no extra checks
-  void
-  setNodeToPort(Node& node,
-                PortType portType,
-                PortIndex portIndex);
-
-  void
-  removeFromNodes() const;
-
-public:
-
-  ConnectionGraphicsObject&
-  getConnectionGraphicsObject() const;
-
-  ConnectionState const &
-  connectionState() const;
-  ConnectionState&
-  connectionState();
-
-  ConnectionGeometry&
-  connectionGeometry();
-
-  ConnectionGeometry const&
-  connectionGeometry() const;
-
   Node*
   getNode(PortType portType) const;
 
@@ -107,24 +60,26 @@ public:
   PortIndex
   getPortIndex(PortType portType) const;
 
-  void
-  clearNode(PortType portType);
-
   NodeDataType
   dataType() const;
+
+  ConnectionID
+  id() const;
 
 public: // data propagation
 
   void
   propagateData(std::shared_ptr<NodeData> nodeData) const;
+
   void
   propagateEmptyData() const;
 
 private:
-
-  QUuid _id;
-
-private:
+  
+  void 
+  setNodeToPort(Node& node,
+                PortType portType,
+                PortIndex portIndex);
 
   Node* _outNode = nullptr;
   Node* _inNode  = nullptr;

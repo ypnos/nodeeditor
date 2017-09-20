@@ -5,15 +5,16 @@
 #include "ConnectionGeometry.hpp"
 #include "ConnectionState.hpp"
 #include "ConnectionGraphicsObject.hpp"
-#include "Connection.hpp"
 
 #include "NodeData.hpp"
 
 #include "StyleCollection.hpp"
 
-using QtNodes::ConnectionPainter;
-using QtNodes::ConnectionGeometry;
-using QtNodes::Connection;
+#include <limits>
+
+#include <QDebug>
+
+namespace QtNodes {
 
 ConnectionPainter::
 ConnectionPainter()
@@ -60,14 +61,11 @@ getPainterStroke(ConnectionGeometry const& geom)
 }
 
 
-#include <limits>
-
-#include <QDebug>
 
 void
 ConnectionPainter::
 paint(QPainter* painter,
-      Connection const &connection)
+      ConnectionGraphicsObject const &cgo)
 {
   auto const &connectionStyle =
     StyleCollection::connectionStyle();
@@ -76,7 +74,7 @@ paint(QPainter* painter,
   QColor hoverColor    = connectionStyle.hoveredColor();
   QColor selectedColor = connectionStyle.selectedColor();
 
-  auto dataType = connection.dataType();
+  auto dataType = cgo.dataType();
 
   if (connectionStyle.useDataDefinedColors())
   {
@@ -87,10 +85,10 @@ paint(QPainter* painter,
   }
 
   ConnectionGeometry const& geom =
-    connection.connectionGeometry();
+    cgo.geometry();
 
   ConnectionState const& state =
-    connection.connectionState();
+    cgo.state();
 
   double const lineWidth     = connectionStyle.lineWidth();
   double const pointDiameter = connectionStyle.pointDiameter();
@@ -128,10 +126,7 @@ paint(QPainter* painter,
 
   bool const hovered = geom.hovered();
 
-  auto const& graphicsObject =
-    connection.getConnectionGraphicsObject();
-
-  bool const selected = graphicsObject.isSelected();
+  bool const selected = cgo.isSelected();
 
   if (hovered || selected)
   {
@@ -184,3 +179,5 @@ paint(QPainter* painter,
   painter->drawEllipse(source, pointRadius, pointRadius);
   painter->drawEllipse(sink, pointRadius, pointRadius);
 }
+
+} // QtNodes

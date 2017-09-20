@@ -1,15 +1,15 @@
 #pragma once
 
+#include <QtGui/QPainter>
+
 #include <memory>
 
-#include <QtGui/QPainter>
 
 namespace QtNodes
 {
 
 class ConnectionGeometry;
-class ConnectionState;
-class Connection;
+class ConnectionGraphicsObject;
 
 class ConnectionPainter
 {
@@ -30,6 +30,6 @@ public:
   static
   void
   paint(QPainter* painter,
-        Connection const& connection);
+        ConnectionGraphicsObject const& cgo);
 };
 }

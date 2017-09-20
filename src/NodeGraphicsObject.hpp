@@ -3,10 +3,9 @@
 #include <QtCore/QUuid>
 #include <QtWidgets/QGraphicsObject>
 
-#include "Connection.hpp"
-
-#include "NodeGeometry.hpp"
 #include "NodeState.hpp"
+#include "NodeGeometry.hpp"
+#include "NodeIndex.hpp"
 
 class QGraphicsProxyWidget;
 
@@ -14,7 +13,6 @@ namespace QtNodes
 {
 
 class FlowScene;
-class FlowItemEntry;
 
 /// Class reacts on GUI events, mouse clicks and
 /// forwards painting operation.
@@ -23,17 +21,30 @@ class NodeGraphicsObject : public QGraphicsObject
   Q_OBJECT
 
 public:
-  NodeGraphicsObject(FlowScene &scene,
-                     Node& node);
-
-  virtual
+  NodeGraphicsObject(FlowScene& scene, const NodeIndex& index);
+  
   ~NodeGraphicsObject();
-
-  Node&
-  node();
-
-  Node const&
-  node() const;
+  
+  NodeIndex
+  index() const;
+  
+  FlowScene&
+  flowScene();
+  
+  FlowScene const&
+  flowScene() const;
+  
+  NodeGeometry&
+  geometry();
+  
+  NodeGeometry const&
+  geometry() const;
+  
+  NodeState&
+  nodeState();
+  
+  NodeState const&
+  nodeState() const;
 
   QRectF
   boundingRect() const override;
@@ -46,6 +57,15 @@ public:
   void
   moveConnections() const;
 
+  
+  void reactToPossibleConnection(PortType,
+                                 NodeDataType,
+                                 QPointF const & scenePoint);
+
+  void
+  resetReactionToConnection();
+
+  
   enum { Type = UserType + 1 };
 
   int
@@ -90,13 +110,18 @@ private:
 
 private:
 
-  FlowScene & _scene;
-
-  Node& _node;
-
+  FlowScene& _scene;
+  
+  NodeIndex _nodeIndex;
+  
+  NodeGeometry _geometry;
+  
+  NodeState _state;
+  
   bool _locked;
 
   // either nullptr or owned by parent QGraphicsItem
   QGraphicsProxyWidget * _proxyWidget;
+
 };
 }

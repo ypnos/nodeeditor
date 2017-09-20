@@ -12,8 +12,8 @@
 namespace QtNodes
 {
 
-class Connection;
-class NodeDataModel;
+class NodeIndex;
+class ConnectionGraphicsObject;
 
 /// Contains vectors of connected input and output connections.
 /// Stores bool for reacting on hovering connections
@@ -28,12 +28,12 @@ public:
 
 public:
 
-  NodeState(std::unique_ptr<NodeDataModel> const &model);
+  NodeState(const NodeIndex& index);
 
 public:
 
   using ConnectionPtrSet =
-          std::unordered_map<QUuid, Connection*>;
+          std::vector<ConnectionGraphicsObject*>;
 
   /// Returns vector of connections ID.
   /// Some of them can be empty (null)
@@ -49,12 +49,12 @@ public:
   void
   setConnection(PortType portType,
                 PortIndex portIndex,
-                Connection& connection);
+                ConnectionGraphicsObject& connection);
 
   void
   eraseConnection(PortType portType,
                   PortIndex portIndex,
-                  QUuid id);
+                  ConnectionGraphicsObject& connection);
 
   ReactToConnectionState
   reaction() const;

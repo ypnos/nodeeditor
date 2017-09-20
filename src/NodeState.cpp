@@ -1,20 +1,16 @@
 #include "NodeState.hpp"
 
 #include "NodeDataModel.hpp"
+#include "NodeIndex.hpp"
+#include "FlowSceneModel.hpp"
+#include "QUuidStdHash.hpp"
 
-#include "Connection.hpp"
-
-using QtNodes::NodeState;
-using QtNodes::NodeDataType;
-using QtNodes::NodeDataModel;
-using QtNodes::PortType;
-using QtNodes::PortIndex;
-using QtNodes::Connection;
+namespace QtNodes {
 
 NodeState::
-NodeState(std::unique_ptr<NodeDataModel> const &model)
-  : _inConnections(model->nPorts(PortType::In))
-  , _outConnections(model->nPorts(PortType::Out))
+NodeState(NodeIndex const &index)
+  : _inConnections(index.model()->nodePortCount(index, PortType::In))
+  , _outConnections(index.model()->nodePortCount(index, PortType::Out))
   , _reaction(NOT_REACTING)
   , _reactingPortType(PortType::None)
   , _resizing(false)
@@ -57,22 +53,25 @@ void
 NodeState::
 setConnection(PortType portType,
               PortIndex portIndex,
-              Connection& connection)
+              ConnectionGraphicsObject& connection)
 {
   auto &connections = getEntries(portType);
 
-  connections[portIndex].insert(std::make_pair(connection.id(),
-                                               &connection));
+  connections[portIndex].push_back(&connection);
 }
-
 
 void
 NodeState::
 eraseConnection(PortType portType,
                 PortIndex portIndex,
-                QUuid id)
+                 ConnectionGraphicsObject& conn)
 {
-  getEntries(portType)[portIndex].erase(id);
+  auto& ptrSet = getEntries(portType)[portIndex];
+  auto iter = std::find(ptrSet.begin(), ptrSet.end(), &conn);
+  if (iter != ptrSet.end()) {
+    ptrSet.erase(iter);
+  }
+  
 }
 
 
@@ -136,3 +135,5 @@ resizing() const
 {
   return _resizing;
 }
+
+} // namespace QtNodes

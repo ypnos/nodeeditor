@@ -9,19 +9,18 @@
 
 #include "PortType.hpp"
 #include "Export.hpp"
+#include "NodeIndex.hpp"
 
 namespace QtNodes
 {
 
-class NodeState;
-class NodeDataModel;
-class Node;
+class NodeGraphicsObject;
 
 class NODE_EDITOR_PUBLIC NodeGeometry
 {
 public:
 
-  NodeGeometry(std::unique_ptr<NodeDataModel> const &dataModel);
+  NodeGeometry(const NodeIndex& index);
 
 public:
   unsigned int
@@ -115,9 +114,9 @@ public:
   
   static 
   QPointF 
-  calculateNodePositionBetweenNodePorts(PortIndex targetPortIndex, PortType targetPort, Node* targetNode,
-                                        PortIndex sourcePortIndex, PortType sourcePort, Node* sourceNode,
-                                        Node& newNode);
+  calculateNodePositionBetweenNodePorts(PortIndex targetPortIndex, PortType targetPort, const NodeGraphicsObject& targetNode, 
+                                      PortIndex sourcePortIndex, PortType sourcePort, const NodeGraphicsObject& sourceNode, 
+                                      const NodeGeometry& newNodeGeom);
 private:
 
   unsigned int
@@ -151,7 +150,7 @@ private:
 
   QPointF _draggingPos;
 
-  std::unique_ptr<NodeDataModel> const &_dataModel;
+  NodeIndex _nodeIndex;
 
   mutable QFontMetrics _fontMetrics;
   mutable QFontMetrics _boldFontMetrics;

@@ -11,16 +11,10 @@
 #include "NodeStyle.hpp"
 #include "NodePainterDelegate.hpp"
 #include "Export.hpp"
+#include "FlowSceneModel.hpp"
 
 namespace QtNodes
 {
-
-enum class NodeValidationState
-{
-  Valid,
-  Warning,
-  Error
-};
 
 class StyleCollection;
 
@@ -76,12 +70,6 @@ public:
 
 public:
 
-  enum class ConnectionPolicy
-  {
-    One,
-    Many,
-  };
-
   virtual
   ConnectionPolicy
   portOutConnectionPolicy(PortIndex) const
@@ -94,7 +82,7 @@ public:
 
   void
   setNodeStyle(NodeStyle const& style);
-
+  
 public:
 
   /// Triggers the algorithm

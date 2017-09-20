@@ -12,29 +12,19 @@
 #include "ConnectionGraphicsObject.hpp"
 #include "ConnectionState.hpp"
 
-using QtNodes::Node;
-using QtNodes::NodeGeometry;
-using QtNodes::NodeState;
-using QtNodes::NodeData;
-using QtNodes::NodeDataType;
-using QtNodes::NodeDataModel;
-using QtNodes::NodeGraphicsObject;
-using QtNodes::PortIndex;
-using QtNodes::PortType;
+namespace QtNodes {
 
 Node::
-Node(std::unique_ptr<NodeDataModel> && dataModel)
-  : _id(QUuid::createUuid())
-  , _nodeDataModel(std::move(dataModel))
-  , _nodeState(_nodeDataModel)
-  , _nodeGeometry(_nodeDataModel)
-  , _nodeGraphicsObject(nullptr)
+Node(std::unique_ptr<NodeDataModel> && dataModel, QUuid const& id)
+  : _nodeDataModel(std::move(dataModel))
+  , _index(id)
 {
-  _nodeGeometry.recalculateSize();
-
   // propagate data: model => node
   connect(_nodeDataModel.get(), &NodeDataModel::dataUpdated,
           this, &Node::onDataUpdated);
+
+  _inConnections.resize(nodeDataModel()->nPorts(PortType::In));
+  _outConnections.resize(nodeDataModel()->nPorts(PortType::Out));
 }
 
 
@@ -47,13 +37,13 @@ save() const
 {
   QJsonObject nodeJson;
 
-  nodeJson["id"] = _id.toString();
+  nodeJson["id"] = id().toString();
 
   nodeJson["model"] = _nodeDataModel->save();
 
   QJsonObject obj;
-  obj["x"] = _nodeGraphicsObject->pos().x();
-  obj["y"] = _nodeGraphicsObject->pos().y();
+  obj["x"] = position().x();
+  obj["y"] = position().y();
   nodeJson["position"] = obj;
 
   return nodeJson;
@@ -64,12 +54,12 @@ void
 Node::
 restore(QJsonObject const& json)
 {
-  _id = QUuid(json["id"].toString());
+  _index = QUuid(json["id"].toString());
 
   QJsonObject positionJson = json["position"].toObject();
   QPointF     point(positionJson["x"].toDouble(),
                     positionJson["y"].toDouble());
-  _nodeGraphicsObject->setPos(point);
+  setPosition(point);
 
   _nodeDataModel->restore(json["model"].toObject());
 }
@@ -79,97 +69,23 @@ QUuid
 Node::
 id() const
 {
-  return _id;
+  return _index;
 }
 
 
-void
+QPointF 
 Node::
-reactToPossibleConnection(PortType reactingPortType,
-
-                          NodeDataType reactingDataType,
-                          QPointF const &scenePoint)
-{
-  QTransform const t = _nodeGraphicsObject->sceneTransform();
-
-  QPointF p = t.inverted().map(scenePoint);
-
-  _nodeGeometry.setDraggingPosition(p);
-
-  _nodeGraphicsObject->update();
-
-  _nodeState.setReaction(NodeState::REACTING,
-                         reactingPortType,
-                         reactingDataType);
+position() const {
+  return _position;
 }
-
-
-void
+void 
 Node::
-resetReactionToConnection()
-{
-  _nodeState.setReaction(NodeState::NOT_REACTING);
-  _nodeGraphicsObject->update();
+setPosition(QPointF const& newPos) {
+  _position = newPos;
+  
+  // emit position changed signal
+  emit positionChanged(newPos);
 }
-
-
-NodeGraphicsObject const &
-Node::
-nodeGraphicsObject() const
-{
-  return *_nodeGraphicsObject.get();
-}
-
-
-NodeGraphicsObject &
-Node::
-nodeGraphicsObject()
-{
-  return *_nodeGraphicsObject.get();
-}
-
-
-void
-Node::
-setGraphicsObject(std::unique_ptr<NodeGraphicsObject>&& graphics)
-{
-  _nodeGraphicsObject = std::move(graphics);
-
-  _nodeGeometry.recalculateSize();
-}
-
-
-NodeGeometry&
-Node::
-nodeGeometry()
-{
-  return _nodeGeometry;
-}
-
-
-NodeGeometry const&
-Node::
-nodeGeometry() const
-{
-  return _nodeGeometry;
-}
-
-
-NodeState const &
-Node::
-nodeState() const
-{
-  return _nodeState;
-}
-
-
-NodeState &
-Node::
-nodeState()
-{
-  return _nodeState;
-}
-
 
 NodeDataModel*
 Node::
@@ -179,18 +95,21 @@ nodeDataModel() const
 }
 
 
+std::vector<Connection*>&
+Node::
+connections(PortType pType, PortIndex idx)
+{
+  Q_ASSERT(pType == PortType::In ? idx < _inConnections.size() : idx < _outConnections.size());
+  
+  return pType == PortType::In ? _inConnections[idx] : _outConnections[idx];
+}
+
 void
 Node::
 propagateData(std::shared_ptr<NodeData> nodeData,
               PortIndex inPortIndex) const
 {
   _nodeDataModel->setInData(nodeData, inPortIndex);
-
-  //Recalculate the nodes visuals. A data change can result in the node taking more space than before, so this forces a recalculate+repaint on the affected node
-  _nodeGraphicsObject->setGeometryChanged();
-  _nodeGeometry.recalculateSize();
-  _nodeGraphicsObject->update();
-  _nodeGraphicsObject->moveConnections();
 }
 
 
@@ -199,10 +118,6 @@ Node::
 onDataUpdated(PortIndex index)
 {
   auto nodeData = _nodeDataModel->outData(index);
-
-  auto connections =
-    _nodeState.connections(PortType::Out, index);
-
-  for (auto const & c : connections)
-    c.second->propagateData(nodeData);
 }
+
+} // namespace QtNodes
