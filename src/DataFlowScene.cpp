@@ -341,6 +341,9 @@ bool DataFlowScene::DataFlowModel::removeConnection(NodeIndex const& leftNodeIdx
   connID.lPortID = leftPortID;
   connID.rPortID = rightPortID;
   
+  // update the node
+  _connections[connID]->propagateEmptyData();
+  
   // remove it from the nodes
   auto& leftConns = leftNode->connections(PortType::Out, leftPortID);
   auto iter = std::find_if(leftConns.begin(), leftConns.end(), [&](Connection* conn){ return conn->id() == connID; });
@@ -372,7 +375,7 @@ bool DataFlowScene::DataFlowModel::addConnection(NodeIndex const& leftNodeIdx, P
   connID.rNodeID = rightNodeIdx.id();
   connID.lPortID = leftPortID;
   connID.rPortID = rightPortID;
-
+  
   // create the connection
   auto conn = std::make_shared<Connection>(*rightNode, rightPortID, *leftNode, leftPortID);
   _connections[connID] = conn;
@@ -381,6 +384,9 @@ bool DataFlowScene::DataFlowModel::addConnection(NodeIndex const& leftNodeIdx, P
   leftNode->connections(PortType::Out, leftPortID).push_back(conn.get());
   rightNode->connections(PortType::In, rightPortID).push_back(conn.get());
   
+  // update the node
+  _connections[connID]->propagateData(leftNode->nodeDataModel()->outData(leftPortID));
+
   // tell the view the connection was added
   emit connectionAdded(leftNodeIdx, leftPortID, rightNodeIdx, rightPortID);
   
@@ -420,6 +426,7 @@ QUuid DataFlowScene::DataFlowModel::addNode(const QString& typeID, QPointF const
   QUuid nodeid = QUuid::createUuid();
   
   // create a node
+  auto modelPtr = model.get(); // cache the ptr
   auto node = std::make_unique<Node>(std::move(model), nodeid);
   
   // cache the pointer so the connection can be made
@@ -430,6 +437,14 @@ QUuid DataFlowScene::DataFlowModel::addNode(const QString& typeID, QPointF const
   
   // connect to the geometry gets updated
   connect(nodePtr, &Node::positionChanged, this, [this, nodeid](QPointF const&){ nodeMoved(nodeIndex(nodeid)); });
+  
+  // connect to data changes
+  connect(modelPtr, &NodeDataModel::dataUpdated, this, [nodePtr](PortIndex id) {
+    nodePtr->onDataUpdated(id);
+    for (const auto& conn : nodePtr->connections(PortType::Out, id)) {
+      conn->propagateData(nodePtr->nodeDataModel()->outData(id));
+    }
+  });
   
   // tell the view
   emit nodeAdded(nodeid);
