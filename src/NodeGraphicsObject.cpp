@@ -65,7 +65,6 @@ NodeGraphicsObject(FlowScene &scene,
   };
   connect(this, &QGraphicsObject::xChanged, this, onMoveSlot);
   connect(this, &QGraphicsObject::yChanged, this, onMoveSlot);
-
 }
 
 
@@ -401,11 +400,4 @@ mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
   QGraphicsItem::mouseDoubleClickEvent(event);
 
   _scene.nodeDoubleClicked(node());
-}
-
-void
-NodeGraphicsObject::
-contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
-{
-  _scene.nodeContextMenu(node(), mapToScene(event->pos()));
 }

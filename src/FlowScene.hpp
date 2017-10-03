@@ -112,8 +112,6 @@ signals:
 
   void nodeHoverLeft(Node& n);
 
-  void nodeContextMenu(Node& n, const QPointF& pos);
-
 private:
 
   using SharedConnection = std::shared_ptr<Connection>;
