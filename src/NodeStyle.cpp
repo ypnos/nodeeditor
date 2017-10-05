@@ -27,6 +27,11 @@ NodeStyle()
   loadJsonFile(":DefaultStyle.json");
 }
 
+const NodeStyle& NodeStyle::nodeStyle()
+{
+  return StyleCollection::nodeStyle();
+}
+
 
 void
 NodeStyle::

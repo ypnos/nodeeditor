@@ -16,6 +16,8 @@ public:
 
 public:
 
+  static const NodeStyle& nodeStyle();
+
   static void setNodeStyle(QString jsonText);
 
   static void setNodeStyleFromFile(QString styleFile);
