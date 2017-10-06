@@ -40,6 +40,8 @@ public:
 
   FlowSceneModel();
 
+  virtual ~FlowSceneModel() = default;
+
   // Scene specific functions
   virtual QStringList modelRegistry() const = 0;
 
@@ -81,25 +83,25 @@ public:
   virtual QString nodeValidationMessage(NodeIndex const& index) const = 0;
 
   /// Get the painter delegate
-  virtual NodePainterDelegate* nodePainterDelegate(NodeIndex const& index) const = 0;
+  virtual NodePainterDelegate* nodePainterDelegate(NodeIndex const& /* index */) const { return nullptr; }
   
   /// Get the style
-  virtual NodeStyle nodeStyle(NodeIndex const& index) const { return {}; }
+  virtual NodeStyle nodeStyle(NodeIndex const& /* index */) const { return {}; }
   
   /// Get the count of DataPorts
   virtual unsigned int nodePortCount(NodeIndex const& index, PortType portType) const = 0;
 
   /// Get the port caption
-  virtual QString nodePortCaption(NodeIndex const& index, PortIndex portID, PortType portType) const = 0;
+  virtual QString nodePortCaption(NodeIndex const& index, PortType portType, PortIndex portID) const = 0;
 
   /// Get the port data type
-  virtual NodeDataType nodePortDataType(NodeIndex const& index, PortIndex portID, PortType portType) const = 0;
+  virtual NodeDataType nodePortDataType(NodeIndex const& index, PortType portType, PortIndex portID) const = 0;
 
   /// Port Policy
-  virtual ConnectionPolicy nodePortConnectionPolicy(NodeIndex const& index, PortIndex portID, PortType portType) const = 0;
+  virtual ConnectionPolicy nodePortConnectionPolicy(NodeIndex const& index, PortType portType, PortIndex portID) const = 0;
 
   /// Get a connection at a port
-  virtual std::vector<std::pair<NodeIndex, PortIndex>> nodePortConnections(NodeIndex const& index, PortIndex portID, PortType portTypes) const = 0;
+  virtual std::vector<std::pair<NodeIndex, PortIndex>> nodePortConnections(NodeIndex const& index, PortType portTypes, PortIndex portID) const = 0;
 
   // Mutation functions
   /////////////////////
@@ -138,6 +140,8 @@ public:
   virtual void nodeHovered(NodeIndex const& /*index*/, QPoint const& /*pos*/, bool /*entered*/) {}
   
   virtual void nodeDoubleClicked(NodeIndex const& /*index*/, QPoint const& /*pos*/) {}
+
+  virtual void nodeContextMenu(NodeIndex const& /*index*/, QPoint const& /*pos*/) {}
 
 signals:
 

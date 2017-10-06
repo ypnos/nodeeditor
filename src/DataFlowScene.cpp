@@ -290,21 +290,21 @@ unsigned int DataFlowScene::DataFlowModel::nodePortCount(NodeIndex const& index,
   
   return node->nodeDataModel()->nPorts(portType);
 }
-QString DataFlowScene::DataFlowModel::nodePortCaption(NodeIndex const& index, PortIndex pIndex, PortType portType) const {
+QString DataFlowScene::DataFlowModel::nodePortCaption(NodeIndex const& index, PortType portType, PortIndex pIndex) const {
   Q_ASSERT(index.isValid());
   
   auto* node = static_cast<Node*>(index.internalPointer());
   
   return node->nodeDataModel()->portCaption(portType, pIndex);
 }
-NodeDataType DataFlowScene::DataFlowModel::nodePortDataType(NodeIndex const& index, PortIndex pIndex, PortType portType) const {
+NodeDataType DataFlowScene::DataFlowModel::nodePortDataType(NodeIndex const& index, PortType portType, PortIndex pIndex) const {
   Q_ASSERT(index.isValid());
   
   auto* node = static_cast<Node*>(index.internalPointer());
   
   return node->nodeDataModel()->dataType(portType, pIndex);
 }
-ConnectionPolicy DataFlowScene::DataFlowModel::nodePortConnectionPolicy(NodeIndex const& index, PortIndex pIndex, PortType portType) const {
+ConnectionPolicy DataFlowScene::DataFlowModel::nodePortConnectionPolicy(NodeIndex const& index, PortType portType, PortIndex pIndex) const {
   Q_ASSERT(index.isValid());
   
   auto* node = static_cast<Node*>(index.internalPointer());
@@ -314,7 +314,7 @@ ConnectionPolicy DataFlowScene::DataFlowModel::nodePortConnectionPolicy(NodeInde
   }
   return node->nodeDataModel()->portOutConnectionPolicy(pIndex);
 }
-std::vector<std::pair<NodeIndex, PortIndex>> DataFlowScene::DataFlowModel::nodePortConnections(NodeIndex const& index, PortIndex id, PortType portType) const {
+std::vector<std::pair<NodeIndex, PortIndex>> DataFlowScene::DataFlowModel::nodePortConnections(NodeIndex const& index, PortType portType, PortIndex id) const {
   Q_ASSERT(index.isValid());
   
   auto* node = static_cast<Node*>(index.internalPointer());

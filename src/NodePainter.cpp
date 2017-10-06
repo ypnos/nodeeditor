@@ -118,10 +118,10 @@ drawConnectionPoints(QPainter* painter, NodeGraphicsObject const & graphicsObjec
 
         QPointF p = nodeGeometry.portScenePosition(i, portType);
 
-        auto const & dataType = model.nodePortDataType(graphicsObject.index(), i, portType);
+        auto const & dataType = model.nodePortDataType(graphicsObject.index(), portType, i);
 
         bool canConnect = (nodeState.getEntries(portType)[i].empty() ||
-                            model.nodePortConnectionPolicy(graphicsObject.index(), i, portType) == ConnectionPolicy::Many);
+                            model.nodePortConnectionPolicy(graphicsObject.index(), portType, i) == ConnectionPolicy::Many);
 
         double r = 1.0;
         if (nodeState.isReacting() &&
@@ -203,7 +203,7 @@ drawFilledConnectionPoints(QPainter * painter, NodeGraphicsObject const & graphi
 
         if (!state.getEntries(portType)[i].empty())
         {
-          auto const & dataType = model.nodePortDataType(graphicsObject.index(), i, portType);
+          auto const & dataType = model.nodePortDataType(graphicsObject.index(), portType, i);
 
           if (connectionStyle.useDataDefinedColors())
           {
@@ -291,11 +291,11 @@ drawEntryLabels(QPainter * painter, NodeGraphicsObject const & graphicsObject)
         else
           painter->setPen(nodeStyle.FontColor);
 
-        QString s = model.nodePortCaption(graphicsObject.index(), i, portType);
+        QString s = model.nodePortCaption(graphicsObject.index(), portType, i);
 
         if (s.isEmpty())
         {
-          s = model.nodePortDataType(graphicsObject.index(), i, portType).name;
+          s = model.nodePortDataType(graphicsObject.index(), portType, i).name;
         }
 
         auto rect = metrics.boundingRect(s);

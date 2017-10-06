@@ -53,7 +53,7 @@ canConnect(PortIndex &portIndex, bool& typeConversionNeeded, QString& converterM
   auto connectionDataType = _connection->dataType();
 
   auto const   &modelTarget = _node.model();
-  NodeDataType candidateNodeDataType = modelTarget->nodePortDataType(_node, portIndex, requiredPort);
+  NodeDataType candidateNodeDataType = modelTarget->nodePortDataType(_node, requiredPort, portIndex);
 
   // if the types don't match, try a conversion
   if (connectionDataType.id != candidateNodeDataType.id)
@@ -235,7 +235,7 @@ nodePortIsEmpty(PortType portType, PortIndex portIndex) const
 
   if (entries[portIndex].empty()) return true;
 
-  const auto outPolicy = _node.model()->nodePortConnectionPolicy(_node, portIndex, portType);
+  const auto outPolicy = _node.model()->nodePortConnectionPolicy(_node, portType, portIndex);
   return outPolicy == ConnectionPolicy::Many;
 }
 } // namespace QtNodes

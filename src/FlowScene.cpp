@@ -34,10 +34,10 @@ FlowScene::FlowScene(FlowSceneModel* model)
     // go through them and add the connections
     for (auto portID = 0u; portID < numPorts; ++portID) {
       // go through connections
-      auto connections = model->nodePortConnections(id, portID, PortType::Out);
+      auto connections = model->nodePortConnections(id, PortType::Out, portID);
       
       // validate the sanity of the model--make sure if it is marked as one connection per port then there is no more than one connection
-      Q_ASSERT(model->nodePortConnectionPolicy(id, portID, PortType::Out) == ConnectionPolicy::Many || connections.size() <= 1);
+      Q_ASSERT(model->nodePortConnectionPolicy(id, PortType::Out, portID) == ConnectionPolicy::Many || connections.size() <= 1);
       
       for (const auto& conn : connections) {
         connectionAdded(id, portID, conn.first, conn.second);
@@ -184,10 +184,10 @@ nodePortUpdated(NodeIndex const& id)
     for (auto portID = 0u; portID < numPorts; ++portID) {
 
       // go through connections
-      auto connections = model()->nodePortConnections(id, portID, ty);
+      auto connections = model()->nodePortConnections(id, ty, portID);
       
       // validate the sanity of the model--make sure if it is marked as one connection per port then there is no more than one connection
-      Q_ASSERT(model()->nodePortConnectionPolicy(id, portID, ty) == ConnectionPolicy::Many || connections.size() <= 1);
+      Q_ASSERT(model()->nodePortConnectionPolicy(id, ty, portID) == ConnectionPolicy::Many || connections.size() <= 1);
       
       for (const auto& conn : connections) {
         
@@ -220,11 +220,11 @@ connectionRemoved(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex con
 {
   // check the model's sanity
 #ifndef NDEBUG
-  for (const auto& conn : model()->nodePortConnections(leftNode, leftPortID, PortType::Out)) {
+  for (const auto& conn : model()->nodePortConnections(leftNode, PortType::Out, leftPortID)) {
     // if you fail here, then you're emitting connectionRemoved on a connection that is in the model
     Q_ASSERT (conn.first != rightNode || conn.second != rightPortID);
   }
-  for (const auto& conn : model()->nodePortConnections(rightNode, rightPortID, PortType::In)) {
+  for (const auto& conn : model()->nodePortConnections(rightNode, PortType::In, rightPortID)) {
     // if you fail here, then you're emitting connectionRemoved on a connection that is in the model
     Q_ASSERT (conn.first != leftNode || conn.second != leftPortID);
   }
@@ -262,7 +262,7 @@ connectionAdded(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex const
   Q_ASSERT(rightPortID < model()->nodePortCount(rightNode, PortType::In));
 
   bool checkedOut = false;
-  for (const auto& conn : model()->nodePortConnections(leftNode, leftPortID, PortType::Out)) {
+  for (const auto& conn : model()->nodePortConnections(leftNode, PortType::Out, leftPortID)) {
     if (conn.first == rightNode && conn.second == rightPortID) {
       checkedOut = true;
       break;
@@ -271,7 +271,7 @@ connectionAdded(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex const
   // if you fail here, then you're emitting connectionAdded on a connection that isn't in the model
   Q_ASSERT(checkedOut);
   checkedOut = false;
-  for (const auto& conn : model()->nodePortConnections(rightNode, rightPortID, PortType::In)) {
+  for (const auto& conn : model()->nodePortConnections(rightNode, PortType::In, rightPortID)) {
     if (conn.first == leftNode && conn.second == leftPortID) {
       checkedOut = true;
       break;

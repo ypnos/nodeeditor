@@ -124,10 +124,10 @@ private:
     QString nodeValidationMessage(NodeIndex const& index) const override;
     NodePainterDelegate* nodePainterDelegate(NodeIndex const& index) const override;
     unsigned int nodePortCount(NodeIndex const& index, PortType portType) const override;
-    QString nodePortCaption(NodeIndex const& index, PortIndex pIndex, PortType portType) const override;
-    NodeDataType nodePortDataType(NodeIndex const& index, PortIndex pIndex, PortType portType) const override;
-    ConnectionPolicy nodePortConnectionPolicy(NodeIndex const& index, PortIndex pIndex, PortType portType) const override;
-    std::vector<std::pair<NodeIndex, PortIndex>> nodePortConnections(NodeIndex const& index, PortIndex id, PortType portType) const override;
+    QString nodePortCaption(NodeIndex const& index, PortType portType, PortIndex pIndex) const override;
+    NodeDataType nodePortDataType(NodeIndex const& index, PortType portType, PortIndex pIndex) const override;
+    ConnectionPolicy nodePortConnectionPolicy(NodeIndex const& index, PortType portType, PortIndex pIndex) const override;
+    std::vector<std::pair<NodeIndex, PortIndex>> nodePortConnections(NodeIndex const& index, PortType portType, PortIndex id) const override;
 
     // FlowSceneModel write interface
     bool removeConnection(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex const& rightNode, PortIndex rightPortID) override;

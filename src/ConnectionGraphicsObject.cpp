@@ -120,10 +120,10 @@ ConnectionGraphicsObject::dataType() const
   auto validNode = node(validType);
   Q_ASSERT(validNode.isValid());
   
-  auto dataType = _scene.model()->nodePortDataType(validNode, portIndex(validType), validType);
+  auto dataType = _scene.model()->nodePortDataType(validNode, validType, portIndex(validType));
   
   // make sure it matches the other side
-  Q_ASSERT(!node(oppositePort(validType)).isValid() || dataType.id == node(oppositePort(validType)).model()->nodePortDataType(node(oppositePort(validType)), portIndex(oppositePort(validType)), oppositePort(validType)).id);
+  Q_ASSERT(!node(oppositePort(validType)).isValid() || dataType.id == node(oppositePort(validType)).model()->nodePortDataType(node(oppositePort(validType)), oppositePort(validType), portIndex(oppositePort(validType))).id);
   
   return dataType;
 }

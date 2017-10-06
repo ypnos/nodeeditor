@@ -309,11 +309,11 @@ portWidth(PortType portType) const
 
   for (auto i = 0ul; i < _nodeIndex.model()->nodePortCount(_nodeIndex, portType); ++i)
   {
-    QString name = _nodeIndex.model()->nodePortCaption(_nodeIndex, i, portType);
+    QString name = _nodeIndex.model()->nodePortCaption(_nodeIndex, portType, i);
 
     if (name.isEmpty())
     {
-      name = _nodeIndex.model()->nodePortDataType(_nodeIndex, i, portType).name;
+      name = _nodeIndex.model()->nodePortDataType(_nodeIndex, portType, i).name;
     }
 
     width = std::max(unsigned(_fontMetrics.width(name)),

@@ -12,7 +12,7 @@ bool FlowSceneModel::removeNodeWithConnections(NodeIndex const& index) {
   // delete the conenctions that node has first
   auto deleteConnections = [&](PortType ty) -> bool {
     for (PortIndex portID = 0; portID < nodePortCount(index, ty); ++portID) {
-      auto inputConnections = nodePortConnections(index, portID, ty);
+      auto inputConnections = nodePortConnections(index, ty, portID);
       for (const auto& conn : inputConnections) {
         // try to remove it
         bool success;
