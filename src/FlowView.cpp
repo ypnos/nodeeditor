@@ -171,6 +171,8 @@ contextMenuEvent(QContextMenuEvent *event)
 
     QPointF posView = this->mapToScene(pos);
 
+    modelMenu.close();
+
     // try to create the node
     auto uuid = _scene->model()->addNode(modelName, posView);
     
@@ -180,7 +182,6 @@ contextMenuEvent(QContextMenuEvent *event)
         _scene->model()->moveNode(_scene->model()->nodeIndex(uuid), posView);
     }
 
-    modelMenu.close();
   });
 
   //Setup filtering
