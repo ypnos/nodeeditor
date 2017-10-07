@@ -353,7 +353,7 @@ drawValidationRect(QPainter * painter, NodeGraphicsObject const & graphicsObject
 
   if (modelValidationState != NodeValidationState::Valid)
   {
-    NodeStyle const& nodeStyle = model.nodeStyle(graphicsObject.index())
+    NodeStyle const& nodeStyle = model.nodeStyle(graphicsObject.index());
 
     auto color = graphicsObject.isSelected()
                  ? nodeStyle.SelectedBoundaryColor

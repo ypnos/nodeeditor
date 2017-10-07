@@ -194,7 +194,7 @@ QStringList DataFlowScene::DataFlowModel::modelRegistry() const {
   }
   return list;
 }
-QString DataFlowScene::DataFlowModel::nodeTypeCatergory(QString const& name) const {
+QString DataFlowScene::DataFlowModel::nodeTypeCategory(QString const& name) const {
   auto iter = _registry->registeredModelsCategoryAssociation().find(name);
   
   if (iter != _registry->registeredModelsCategoryAssociation().end()) {

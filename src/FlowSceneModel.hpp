@@ -46,9 +46,9 @@ public:
   // Scene specific functions
   virtual QStringList modelRegistry() const = 0;
 
-  /// Get the catergory for a node type
+  /// Get the category for a node type
   /// name will be from `modelRegistry()`
-  virtual QString nodeTypeCatergory(QString const& /*name*/) const { return {}; }
+  virtual QString nodeTypeCategory(QString const& /*name*/) const { return {}; }
 
   /// Get the conerter node type name, or "" if there is none.
   virtual QString converterNode(NodeDataType const& /*lhs*/, NodeDataType const& ) const { return {}; }

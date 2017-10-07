@@ -111,7 +111,7 @@ private:
 
     // FlowSceneModel read interface
     QStringList modelRegistry() const override;
-    QString nodeTypeCatergory(QString const& /*name*/) const override;
+    QString nodeTypeCategory(QString const& /*name*/) const override;
     QString converterNode(NodeDataType const& /*lhs*/, NodeDataType const& ) const override;
     QList<QUuid> nodeUUids() const override;
     NodeIndex nodeIndex(const QUuid& ID) const override;

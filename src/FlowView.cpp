@@ -132,26 +132,26 @@ contextMenuEvent(QContextMenuEvent *event)
 
   modelMenu.addAction(treeViewAction);
 
-  std::unordered_map<QString, QTreeWidgetItem*> catergoryItems;
+  std::unordered_map<QString, QTreeWidgetItem*> categoryItems;
   for (auto const &modelName : _scene->model()->modelRegistry())
   {
-    // get the catergory
-    auto catergory = _scene->model()->nodeTypeCatergory(modelName);
+    // get the category
+    auto category = _scene->model()->nodeTypeCategory(modelName);
     
     // see if it's already in the map
-    auto iter = catergoryItems.find(catergory);
+    auto iter = categoryItems.find(category);
     
     // add it if it doesn't exist
-    if (iter == catergoryItems.end()) {
+    if (iter == categoryItems.end()) {
         
         auto item = new QTreeWidgetItem(treeView);
-        item->setText(0, catergory);
+        item->setText(0, category);
         item->setData(0, Qt::UserRole, skipText);
         
-        iter = catergoryItems.emplace(catergory, item).first; 
+        iter = categoryItems.emplace(category, item).first; 
     }
     
-    // this is the catergory item
+    // this is the category item
     auto parent = iter->second;
     
     // add the item
@@ -193,7 +193,7 @@ contextMenuEvent(QContextMenuEvent *event)
   //Setup filtering
   connect(txtBox, &QLineEdit::textChanged, [&](const QString &text)
   {
-    for (auto& topLvlItem : catergoryItems)
+    for (auto& topLvlItem : categoryItems)
     {
       for (int i = 0; i < topLvlItem.second->childCount(); ++i)
       {
