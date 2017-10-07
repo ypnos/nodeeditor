@@ -59,7 +59,7 @@ NodeGraphicsObject*
 FlowScene::
 nodeGraphicsObject(QUuid const& index) const
 {
-  auto iter = _nodeGraphicsObjects.find(index;
+  auto iter = _nodeGraphicsObjects.find(index);
   if (iter == _nodeGraphicsObjects.end()) {
     return nullptr;
   }
