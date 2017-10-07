@@ -99,11 +99,11 @@ void
 NodePainter::
 drawConnectionPoints(QPainter* painter, NodeGraphicsObject const & graphicsObject)
 {
-  NodeStyle const& nodeStyle      = StyleCollection::nodeStyle();
-  auto const     &connectionStyle = StyleCollection::connectionStyle();
-  NodeState const& nodeState = graphicsObject.nodeState();
+  auto const &connectionStyle      = StyleCollection::connectionStyle();
+  NodeState const& nodeState       = graphicsObject.nodeState();
   NodeGeometry const& nodeGeometry = graphicsObject.geometry();
-  const FlowSceneModel& model = *graphicsObject.flowScene().model();
+  const FlowSceneModel& model      = *graphicsObject.flowScene().model();
+  NodeStyle const& nodeStyle       = model.nodeStyle(graphicsObject.index());
 
   float diameter = nodeStyle.ConnectionPointDiameter;
   auto  reducedDiameter = diameter * 0.6;
@@ -184,11 +184,11 @@ void
 NodePainter::
 drawFilledConnectionPoints(QPainter * painter, NodeGraphicsObject const & graphicsObject)
 {
-  NodeStyle const& nodeStyle       = StyleCollection::nodeStyle();
-  auto const     & connectionStyle = StyleCollection::connectionStyle();
-  NodeState const& state = graphicsObject.nodeState();
-  NodeGeometry const& geom = graphicsObject.geometry();
+  auto const& connectionStyle = StyleCollection::connectionStyle();
+  NodeState const& state      = graphicsObject.nodeState();
+  NodeGeometry const& geom    = graphicsObject.geometry();
   FlowSceneModel const& model = *graphicsObject.index().model();
+  NodeStyle const& nodeStyle  = model.nodeStyle(graphicsObject.index());
 
   auto diameter = nodeStyle.ConnectionPointDiameter;
 
@@ -233,7 +233,7 @@ void
 NodePainter::
 drawModelName(QPainter * painter, NodeGraphicsObject const & graphicsObject)
 {
-  NodeStyle const& nodeStyle = StyleCollection::nodeStyle();
+  NodeStyle const& nodeStyle = graphicsObject.index().model()->nodeStyle(graphicsObject.index());
   FlowSceneModel const& model = *graphicsObject.index().model();
   NodeGeometry const& geom = graphicsObject.geometry();
 
@@ -276,7 +276,7 @@ drawEntryLabels(QPainter * painter, NodeGraphicsObject const & graphicsObject)
   auto drawPoints =
     [&](PortType portType)
     {
-      auto const &nodeStyle = StyleCollection::nodeStyle();
+      auto const &nodeStyle = graphicsObject.index().model()->nodeStyle(graphicsObject.index());
 
       auto& entries = state.getEntries(portType);
 
@@ -353,7 +353,7 @@ drawValidationRect(QPainter * painter, NodeGraphicsObject const & graphicsObject
 
   if (modelValidationState != NodeValidationState::Valid)
   {
-    NodeStyle const& nodeStyle = StyleCollection::nodeStyle();
+    NodeStyle const& nodeStyle = model.nodeStyle(graphicsObject.index())
 
     auto color = graphicsObject.isSelected()
                  ? nodeStyle.SelectedBoundaryColor

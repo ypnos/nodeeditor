@@ -3,6 +3,7 @@
 #include "PortType.hpp"
 #include "Export.hpp"
 #include "NodeStyle.hpp"
+#include "StyleCollection.hpp"
 
 #include <cstddef>
 
@@ -86,7 +87,7 @@ public:
   virtual NodePainterDelegate* nodePainterDelegate(NodeIndex const& /* index */) const { return nullptr; }
   
   /// Get the style
-  virtual NodeStyle nodeStyle(NodeIndex const& /* index */) const { return {}; }
+  virtual NodeStyle nodeStyle(NodeIndex const& /* index */) const { return StyleCollection::nodeStyle(); }
   
   /// Get the count of DataPorts
   virtual unsigned int nodePortCount(NodeIndex const& index, PortType portType) const = 0;
