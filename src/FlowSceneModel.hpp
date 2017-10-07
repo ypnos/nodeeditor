@@ -146,10 +146,12 @@ public:
 
 signals:
 
-  void nodeRemoved(const QUuid& id);
-  void nodeAdded(const QUuid& newID);
+  void nodeAboutToBeRemoved(NodeIndex const& index);
+  void nodeRemoved(QUuid const& id);
+  void nodeAdded(QUuid const& newID);
   void nodePortUpdated(NodeIndex const& id);
-  void nodeValidationUpdated(NodeIndex const& id);
+  void nodeValidationUpdated(NodeIndex const& id);  
+  void connectionAboutToBeRemoved(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex const& rightNode, PortIndex rightPortID);
   void connectionRemoved(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex const& rightNode, PortIndex rightPortID);
   void connectionAdded(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex const& rightNode, PortIndex rightPortID);
   void nodeMoved(NodeIndex const& index);

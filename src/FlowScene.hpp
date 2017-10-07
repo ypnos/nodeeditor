@@ -38,7 +38,8 @@ public:
 
   FlowSceneModel* model() const { return _model; }
 
-  NodeGraphicsObject* nodeGraphicsObject(const NodeIndex& index);
+  NodeGraphicsObject* nodeGraphicsObject(NodeIndex const& index) const { return nodeGraphicsObject(index.id()); }
+  NodeGraphicsObject* nodeGraphicsObject(QUuid const& id) const;
   
   std::vector<NodeIndex> selectedNodes() const;
 

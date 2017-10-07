@@ -7,6 +7,7 @@
 #include "Node.hpp"
 #include "ConnectionID.hpp"
 #include "Export.hpp"
+#include "DataFlowModel.hpp"
 
 #include <memory>
 #include <functional>
@@ -26,10 +27,6 @@ public:
   DataFlowScene(std::shared_ptr<DataModelRegistry> registry =
               std::make_shared<DataModelRegistry>());
 
-  std::shared_ptr<Connection>createConnection(PortType connectedPort,
-                                              Node& node,
-                                              PortIndex portIndex);
-
   std::shared_ptr<Connection>createConnection(Node& nodeIn,
                                               PortIndex portIndexIn,
                                               Node& nodeOut,
@@ -45,7 +42,7 @@ public:
 
   void removeNode(Node& node);
 
-  DataModelRegistry&registry() const;
+  DataModelRegistry& registry() const;
 
   void setRegistry(std::shared_ptr<DataModelRegistry> registry);
 
@@ -64,7 +61,7 @@ public:
 
   std::unordered_map<QUuid, std::unique_ptr<Node> > const &nodes() const;
 
-  std::unordered_map<QUuid, std::shared_ptr<Connection> > const &connections() const;
+  std::unordered_map<ConnectionID, std::shared_ptr<Connection> > const &connections() const;
 
   std::vector<Node*>selectedNodes() const;
 
@@ -102,48 +99,6 @@ signals:
   void nodeHoverLeft(Node& n);
   
 private:
-  
-  // default model class
-  class DataFlowModel : public FlowSceneModel {
-  public:
-    
-    DataFlowModel(std::shared_ptr<DataModelRegistry> reg);
-
-    // FlowSceneModel read interface
-    QStringList modelRegistry() const override;
-    QString nodeTypeCategory(QString const& /*name*/) const override;
-    QString converterNode(NodeDataType const& /*lhs*/, NodeDataType const& ) const override;
-    QList<QUuid> nodeUUids() const override;
-    NodeIndex nodeIndex(const QUuid& ID) const override;
-    QString nodeTypeIdentifier(NodeIndex const& index) const override;
-    QString nodeCaption(NodeIndex const& index) const override;
-    QPointF nodeLocation(NodeIndex const& index) const override;
-    QWidget* nodeWidget(NodeIndex const& index) const override;
-    bool nodeResizable(NodeIndex const& index) const override;
-    NodeValidationState nodeValidationState(NodeIndex const& index) const override;
-    QString nodeValidationMessage(NodeIndex const& index) const override;
-    NodePainterDelegate* nodePainterDelegate(NodeIndex const& index) const override;
-    unsigned int nodePortCount(NodeIndex const& index, PortType portType) const override;
-    QString nodePortCaption(NodeIndex const& index, PortType portType, PortIndex pIndex) const override;
-    NodeDataType nodePortDataType(NodeIndex const& index, PortType portType, PortIndex pIndex) const override;
-    ConnectionPolicy nodePortConnectionPolicy(NodeIndex const& index, PortType portType, PortIndex pIndex) const override;
-    std::vector<std::pair<NodeIndex, PortIndex>> nodePortConnections(NodeIndex const& index, PortType portType, PortIndex id) const override;
-
-    // FlowSceneModel write interface
-    bool removeConnection(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex const& rightNode, PortIndex rightPortID) override;
-    bool addConnection(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex const& rightNode, PortIndex rightPortID) override;
-    bool removeNode(NodeIndex const& index) override;
-    QUuid addNode(const QString& typeID, QPointF const& location) override;
-    bool moveNode(NodeIndex const& index, QPointF newLocation) override;
-
-    using SharedConnection = std::shared_ptr<Connection>;
-    using UniqueNode       = std::unique_ptr<Node>;
-
-    std::unordered_map<ConnectionID, SharedConnection> _connections;
-    std::unordered_map<QUuid, UniqueNode>              _nodes;
-    std::shared_ptr<DataModelRegistry>                 _registry;
-  };
-  
   
   DataFlowModel* _dataFlowModel;
 

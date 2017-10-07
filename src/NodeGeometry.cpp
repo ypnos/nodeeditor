@@ -53,7 +53,7 @@ QRectF
 NodeGeometry::
 boundingRect() const
 {
-  auto const &nodeStyle = StyleCollection::nodeStyle();
+  auto const &nodeStyle = _nodeIndex.model()->nodeStyle(_nodeIndex);
 
   double addon = 4 * nodeStyle.ConnectionPointDiameter;
 
@@ -132,7 +132,7 @@ portScenePosition(int index,
                   PortType portType,
                   QTransform t) const
 {
-  auto const &nodeStyle = StyleCollection::nodeStyle();
+  auto const &nodeStyle = _nodeIndex.model()->nodeStyle(_nodeIndex);
 
   unsigned int step = _entryHeight + _spacing;
 

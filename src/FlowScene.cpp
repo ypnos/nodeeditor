@@ -47,7 +47,7 @@ FlowScene::FlowScene(FlowSceneModel* model)
   
   // for some reason these end up in the wrong spot, fix that
   for (const auto& n : model->nodeUUids()) {
-    auto ngo = nodeGraphicsObject(model->nodeIndex(n));
+    auto ngo = nodeGraphicsObject(n);
     ngo->geometry().recalculateSize();
     ngo->moveConnections();
   }
@@ -57,9 +57,9 @@ FlowScene::~FlowScene() = default;
 
 NodeGraphicsObject*
 FlowScene::
-nodeGraphicsObject(const NodeIndex& index)
+nodeGraphicsObject(QUuid const& index) const
 {
-  auto iter = _nodeGraphicsObjects.find(index.id());
+  auto iter = _nodeGraphicsObjects.find(index;
   if (iter == _nodeGraphicsObjects.end()) {
     return nullptr;
   }
