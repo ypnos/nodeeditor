@@ -475,3 +475,5 @@ contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
   flowScene().model()->nodeContextMenu(index(), event->screenPos());
 }
+
+} // namespace QtNodes

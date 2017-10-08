@@ -53,8 +53,6 @@ private slots:
   void connectionAdded(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex const& rightNode, PortIndex rightPortID);
   void nodeMoved(NodeIndex const& index);
 
-  void nodeContextMenu(Node& n, const QPointF& pos);
-
 private:
 
   FlowSceneModel* _model;
