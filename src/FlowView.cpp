@@ -102,6 +102,12 @@ void
 FlowView::
 contextMenuEvent(QContextMenuEvent *event)
 {
+  if (itemAt(event->pos()))
+  {
+    QGraphicsView::contextMenuEvent(event);
+    return;
+  }
+
   QMenu modelMenu;
 
   auto skipText = QStringLiteral("skip me");
