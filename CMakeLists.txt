@@ -20,6 +20,8 @@ set(CMAKE_AUTOMOC ON)
 
 option(BUILD_EXAMPLES "Build Examples" ON)
 
+option(NDOES_STATIC "Build static lib (instead of shared lib)" OFF)
+
 
 # Find the QtWidgets library
 find_package(Qt5 COMPONENTS
@@ -49,12 +51,18 @@ file(GLOB_RECURSE LIB_CPPS  ./src/*.cpp )
 qt5_add_resources(RESOURCES ./resources/resources.qrc)
 
 # Tell CMake to create the helloworld executable
-add_library(nodes SHARED ${LIB_CPPS} ${RESOURCES})
+if(NODES_STATIC)
+  add_library(nodes STATIC ${LIB_CPPS} ${RESOURCES})
+
+  target_compile_definitions(nodes PUBLIC "-DNODE_EDITOR_STATIC")
+else()
+  add_library(nodes SHARED ${LIB_CPPS} ${RESOURCES})
+
+  target_compile_definitions(nodes PUBLIC "-DNODE_EDITOR_SHARED")
+  target_compile_definitions(nodes PRIVATE "-DNODE_EDITOR_EXPORTS")
+endif(NODES_STATIC)
 
 target_include_directories(nodes INTERFACE "include")
-
-target_compile_definitions(nodes PUBLIC "-DNODE_EDITOR_SHARED")
-target_compile_definitions(nodes PRIVATE "-DNODE_EDITOR_EXPORTS")
 
 target_link_libraries(nodes
                       Qt5::Core
