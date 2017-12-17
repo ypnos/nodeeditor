@@ -137,6 +137,8 @@ public:
   /////////////////
   
   virtual void connectionHovered(NodeIndex const& /*lhs*/, PortIndex /*lPortIndex*/, NodeIndex const& /*rhs*/, PortIndex /*rPortIndex*/, QPoint const& /*pos*/, bool /*entered*/) {}
+
+  virtual void nodeFocused(NodeIndex const& /*index*/) {}
   
   virtual void nodeHovered(NodeIndex const& /*index*/, QPoint const& /*pos*/, bool /*entered*/) {}
   

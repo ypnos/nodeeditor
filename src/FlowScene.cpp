@@ -18,6 +18,19 @@ FlowScene::FlowScene(FlowSceneModel* model)
   connect(model, &FlowSceneModel::connectionAdded, this, &FlowScene::connectionAdded);
   connect(model, &FlowSceneModel::nodeMoved, this, &FlowScene::nodeMoved);
 
+  /* expose focus changes within the scene to scenemodel */
+  auto onFocusChange = [this] (QGraphicsItem *item) {
+    if (auto node = qgraphicsitem_cast<NodeGraphicsObject*>(item)) {
+      this->model()->nodeFocused(node->index());
+      return;
+    }
+    // ignore focus outside the scene; only take focus away if still in scene
+    if (this->hasFocus()) {
+      this->model()->nodeFocused({});
+    }
+  };
+  connect(this, &QGraphicsScene::focusItemChanged, this, onFocusChange);
+
   // emit node added on all the existing nodes
   for (const auto& n : model->nodeUUids()) {
     nodeAdded(n);
