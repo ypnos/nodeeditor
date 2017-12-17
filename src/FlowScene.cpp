@@ -267,8 +267,8 @@ connectionAdded(NodeIndex const& leftNode, PortIndex leftPortID, NodeIndex const
   // check the model's sanity
 #ifndef NDEBUG
   // if you fail here, then you're emitting connectionAdded on a portID that doesn't exist
-  Q_ASSERT(leftPortID < model()->nodePortCount(leftNode, PortType::Out));
-  Q_ASSERT(rightPortID < model()->nodePortCount(rightNode, PortType::In));
+  Q_ASSERT((unsigned)leftPortID < model()->nodePortCount(leftNode, PortType::Out));
+  Q_ASSERT((unsigned)rightPortID < model()->nodePortCount(rightNode, PortType::In));
 
   bool checkedOut = false;
   for (const auto& conn : model()->nodePortConnections(leftNode, PortType::Out, leftPortID)) {

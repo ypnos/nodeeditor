@@ -164,7 +164,7 @@ contextMenuEvent(QContextMenuEvent *event)
 
   treeView->expandAll();
 
-  connect(treeView, &QTreeWidget::itemClicked, [&](QTreeWidgetItem *item, int column)
+  connect(treeView, &QTreeWidget::itemClicked, [&](QTreeWidgetItem *item)
   {
     QString modelName = item->data(0, Qt::UserRole).toString();
 

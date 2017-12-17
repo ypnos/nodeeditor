@@ -225,10 +225,10 @@ bool DataFlowModel::removeNode(NodeIndex const& index) {
 
   // make sure there are no connections left
   #ifndef NDEBUG
-  for (PortIndex idx = 0; idx < node->nodeDataModel()->nPorts(PortType::In); ++idx) {
+  for (PortIndex idx = 0; (unsigned)idx < node->nodeDataModel()->nPorts(PortType::In); ++idx) {
     Q_ASSERT(node->connections(PortType::In, idx).empty());
   }
-  for (PortIndex idx = 0; idx < node->nodeDataModel()->nPorts(PortType::Out); ++idx) {
+  for (PortIndex idx = 0; (unsigned)idx < node->nodeDataModel()->nPorts(PortType::Out); ++idx) {
     Q_ASSERT(node->connections(PortType::Out, idx).empty());
   }
   #endif
@@ -243,7 +243,7 @@ bool DataFlowModel::removeNode(NodeIndex const& index) {
 
   return true;
 }
-QUuid DataFlowModel::addNode(const QString& typeID, QPointF const& location) {
+QUuid DataFlowModel::addNode(const QString& typeID, QPointF const&) {
   // create the NodeDataModel
   auto model = _registry->create(typeID);
   if (!model) {
@@ -296,7 +296,7 @@ bool DataFlowModel::moveNode(NodeIndex const& index, QPointF newLocation) {
   return true;
 }
 
-void DataFlowModel::nodeDoubleClicked(NodeIndex const& index, QPoint const& pos) {
+void DataFlowModel::nodeDoubleClicked(NodeIndex const& index, QPoint const&) {
   emit nodeDoubleClickedSignal(*_nodes[index.id()]);
 }
 

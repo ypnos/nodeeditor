@@ -99,9 +99,9 @@ std::vector<Connection*>&
 Node::
 connections(PortType pType, PortIndex idx)
 {
-  Q_ASSERT(pType == PortType::In ? idx < _inConnections.size() : idx < _outConnections.size());
+  Q_ASSERT(pType == PortType::In ? (unsigned)idx < _inConnections.size() : (unsigned)idx < _outConnections.size());
   
-  return pType == PortType::In ? _inConnections[idx] : _outConnections[idx];
+  return pType == PortType::In ? _inConnections[(unsigned)idx] : _outConnections[(unsigned)idx];
 }
 
 void

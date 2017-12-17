@@ -23,8 +23,6 @@ paint(QPainter* painter,
 {
   NodeGeometry const& geom = graphicsObject.geometry();
 
-  NodeState const& state = graphicsObject.nodeState();
-
   geom.recalculateSize(painter->font());
 
   //--------------------------------------------

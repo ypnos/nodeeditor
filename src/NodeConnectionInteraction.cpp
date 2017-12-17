@@ -160,6 +160,8 @@ bool
 NodeConnectionInteraction::
 disconnect(PortType portToDisconnect) const
 {
+  // TODO: why is portToDisconnect unused here?
+
   // try to disconnect it
   auto model = _connection->flowScene().model();
   
