@@ -12,6 +12,7 @@
 #include "NodeData.hpp"
 #include "ConnectionState.hpp"
 #include "ConnectionID.hpp"
+#include "Export.hpp"
 
 class QGraphicsSceneMouseEvent;
 
@@ -21,7 +22,7 @@ namespace QtNodes
 class FlowScene;
 
 /// Graphic Object for connection.
-class ConnectionGraphicsObject
+class NODE_EDITOR_PUBLIC ConnectionGraphicsObject
   : public QGraphicsObject
 {
   Q_OBJECT
