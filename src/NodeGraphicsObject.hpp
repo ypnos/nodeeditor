@@ -6,6 +6,7 @@
 #include "NodeState.hpp"
 #include "NodeGeometry.hpp"
 #include "NodeIndex.hpp"
+#include "Export.hpp"
 
 class QGraphicsProxyWidget;
 
@@ -16,7 +17,7 @@ class FlowScene;
 
 /// Class reacts on GUI events, mouse clicks and
 /// forwards painting operation.
-class NodeGraphicsObject : public QGraphicsObject
+class NODE_EDITOR_PUBLIC NodeGraphicsObject : public QGraphicsObject
 {
   Q_OBJECT
 
